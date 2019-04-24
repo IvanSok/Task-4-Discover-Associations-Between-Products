@@ -2,14 +2,13 @@ library("pacman")
 p_load(dplyr, ggplot2,corrplot, GGally, readr,caret,readxl,knitr,
        printr,party,polycor,BBmisc,car,reshape,arules,arulesViz,rstudioapi)
 
-
+#Setting directory path 
 current_path <- getActiveDocumentContext()$path
 setwd(dirname(dirname(current_path)))
 rm(current_path)
 
+#Importing the dataset
 transactions <- read.transactions("Datasets/ElectronidexTransactions2017.csv", sep = ",",format = "basket",header = FALSE)
-
-
 
 itemLabels(transactions)
 length (transactions)
