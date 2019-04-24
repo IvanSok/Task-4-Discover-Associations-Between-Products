@@ -15,6 +15,8 @@ itemLabels(transactions)
 length (transactions)
 inspect(transactions[1:10], itemSep = " + ", setStart = "",
         setEnd ="", linebreak = FALSE)
+size (transactions) # Number of items per transaction
+LIST(transactions) # Lists the transactions by conversion 
 
 # PLOTS:
 itemFrequencyPlot(transactions, horiz = TRUE, 
