@@ -38,7 +38,5 @@ for (i in itemLabels(transactions)) {
   rules_loop <- subset(Rules, items %in% i)
   itemrules[[i]] <- rules_loop
 }
-
 itemrules
-
-
+saveRDS(object = itemrules,file = "Models/ItemRulesSubset")
