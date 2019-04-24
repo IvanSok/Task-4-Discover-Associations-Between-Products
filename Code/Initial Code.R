@@ -24,10 +24,21 @@ itemFrequencyPlot(transactions, horiz = TRUE,
 image(sample(transactions, 100))
 
 #Creating rules for the transactions
-Rules <- apriori (transactions, parameter = list(supp = 0.03, 
-                                                 conf = 0.2,minlen = 2,target = "rules"))
+Rules <- apriori (transactions, parameter = list(supp = 0.001, 
+                                                 conf = 0.9,minlen = 2,target = "rules"))
+Rules <- Rules[-which(is.redundant(Rules) == TRUE)]
 inspect(sort(Rules,by = "lift"))
 summary(Rules)
-imacrules <- subset(Rules, items %in% "iMac")
-inspect(imacrules)
-plot(Rules)
+plot(Rules,jitter = 0)
+
+#Loop to get rules for every subset
+itemrules <- list()
+rules_loop <- c()
+for (i in itemLabels(transactions)) {
+  rules_loop <- subset(Rules, items %in% i)
+  itemrules[[i]] <- rules_loop
+}
+
+itemrules
+
+
