@@ -23,9 +23,9 @@ itemFrequencyPlot(transactions, horiz = TRUE,
                   type = "absolute",topN = 20,popCol = TRUE)
 image(sample(transactions, 100))
 
-
-Rules<- apriori (transactions, parameter = list(supp = 0.03, 
-                                                conf = 0.2,minlen = 2,target = "rules"))
+#Creating rules for the transactions
+Rules <- apriori (transactions, parameter = list(supp = 0.03, 
+                  conf = 0.2,minlen = 2,target = "rules"))
 inspect(sort(Rules,by = "lift"))
 summary(Rules)
 imacrules <- subset(Rules, items %in% "iMac")
