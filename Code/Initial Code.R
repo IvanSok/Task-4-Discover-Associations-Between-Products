@@ -12,11 +12,15 @@ transactions <- read.transactions("Datasets/ElectronidexTransactions2017.csv", s
 
 itemLabels(transactions)
 length (transactions)
-inspect(transactions[1:10], itemSep = " + ", setStart = "", setEnd ="", linebreak = FALSE)
+inspect(transactions[1:10], itemSep = " + ", setStart = "",
+        setEnd ="", linebreak = FALSE)
 
-itemFrequencyPlot(transactions, horiz = TRUE, type = "absolute",topN = 20,popCol = TRUE)
+itemFrequencyPlot(transactions, horiz = TRUE, 
+                 type = "absolute",topN = 20,popCol = TRUE)
 
-Rules<- apriori (transactions, parameter = list(supp = 0.03, conf = 0.2,minlen = 2,target = "rules"))
+Rules<- apriori (transactions, parameter = list(supp = 0.03, 
+                conf = 0.2,minlen = 2,target = "rules"))
+
 inspect(sort(Rules,by = "lift"))
 summary(Rules)
 imacrules <- subset(Rules, items %in% "iMac")
