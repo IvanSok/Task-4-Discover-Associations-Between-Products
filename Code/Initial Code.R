@@ -17,13 +17,6 @@ inspect(transactions[1:10], itemSep = " + ", setStart = "",
         setEnd ="", linebreak = FALSE)
 size (transactions) # Number of items per transaction
 LIST(transactions) # Lists the transactions by conversion 
-<<<<<<< HEAD
-
-# PLOTS:
-itemFrequencyPlot(transactions, horiz = TRUE, 
-                  type = "absolute",topN = 20,popCol = TRUE)
-image(sample(transactions, 100))
-=======
 
 # PLOTS:
 itemFrequencyPlot(transactions, horiz = TRUE, 
@@ -47,14 +40,3 @@ for (i in itemLabels(transactions)) {
 }
 
 itemrules
-
->>>>>>> Joan
-
-#Creating rules for the transactions
-Rules <- apriori (transactions, parameter = list(supp = 0.03, 
-                  conf = 0.2,minlen = 2,target = "rules"))
-inspect(sort(Rules,by = "lift"))
-summary(Rules)
-imacrules <- subset(Rules, items %in% "iMac")
-inspect(imacrules)
-plot(Rules)
