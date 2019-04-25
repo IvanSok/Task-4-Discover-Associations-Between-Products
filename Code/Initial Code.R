@@ -29,12 +29,12 @@ image(sample(transactions, 100))
 
 
 #Creating rules for the transactions
-Rules <- apriori (transactions, parameter = list(supp = 0.001, 
+rules <- apriori (transactions, parameter = list(supp = 0.001, 
                                                  conf = 0.9,minlen = 2,target = "rules"))
-Rules <- Rules[-which(is.redundant(Rules) == TRUE)]
-inspect(sort(Rules,by = "lift"))
-summary(Rules)
-plot(Rules,jitter = 0)
+rules <- rules[-which(is.redundant(rules) == TRUE)]
+inspect(sort(rules,by = "lift"))
+summary(rules)
+plot(rules)
 
 # SORTING RULES BY:
 rules_list <- c("lift", "support", "confidence")
@@ -43,16 +43,15 @@ j <- "## Sorted by"
 for (i in rules_list){
   p <- paste(j,i)
   print(p)
-  inspect(sort(Rules, by = i))
+  inspect(sort(rules, by = i))
   
 }
-
 
 #Loop to get rules for every subset
 itemrules <- list()
 rules_loop <- c()
 for (i in itemLabels(transactions)) {
-  rules_loop <- subset(Rules, items %in% i)
+  rules_loop <- subset(rules, items %in% i)
   itemrules[[i]] <- rules_loop
 }
 itemrules
