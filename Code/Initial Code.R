@@ -10,16 +10,15 @@ rm(current_path)
 
 
 # IMPORTING DATASET:
-transactions <- read.transactions("Datasets/ElectronidexTransactions2017.csv", sep = ",",format = "basket",header = FALSE)
-
-
+transactions <- read.transactions("Datasets/ElectronidexTransactions2017.csv", sep = ",",
+                                  format = "basket",header = FALSE)
 # DATA INSPECTION:
 itemLabels(transactions)
 length (transactions)
 inspect(transactions[1:10], itemSep = " + ", setStart = "",
         setEnd ="", linebreak = FALSE)
-size (transactions) # Number of items per transaction
-LIST(transactions) # Lists the transactions by conversion 
+size (transactions[10:20]) # Number of items per transaction
+LIST(transactions[10:20]) # Lists the transactions by conversion 
 
 
 # PLOTS:
@@ -29,9 +28,9 @@ image(sample(transactions, 100))
 
 
 #Creating rules for the transactions
-rules <- apriori (transactions, parameter = list(supp = 0.001, 
-                                                 conf = 0.9,minlen = 2,target = "rules"))
-rules <- rules[-which(is.redundant(rules) == TRUE)]
+rules <- apriori (transactions, parameter = list(supp = 0.0025, 
+                                                 conf = 0.8,minlen = 2,target = "rules"))
+rules <- rules[which(is.redundant(rules) == FALSE)]
 inspect(sort(rules,by = "lift"))
 summary(rules)
 plot(rules)
@@ -50,9 +49,11 @@ for (i in rules_list){
 #Loop to get rules for every subset
 itemrules <- list()
 rules_loop <- c()
-for (i in itemLabels(transactions)) {
-  rules_loop <- subset(rules, items %in% i)
-  itemrules[[i]] <- rules_loop
+for (k in itemLabels(transactions)) {
+  rules_loop <- subset(rules, items %in% k)
+  itemrules[[k]] <- rules_loop
 }
-itemrules
+inspect(itemrules$iMac)
 saveRDS(object = itemrules,file = "Models/ItemRulesSubset")
+
+inspectDT(rules)
