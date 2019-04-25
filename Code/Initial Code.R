@@ -8,10 +8,10 @@ current_path <- getActiveDocumentContext()$path
 setwd(dirname(dirname(current_path)))
 rm(current_path)
 
-
 # IMPORTING DATASET:
-transactions <- read.transactions("Datasets/ElectronidexTransactions2017.csv", sep = ",",
-                                  format = "basket",header = FALSE)
+transactions <- read.transactions("Datasets/ElectronidexTransactions2017.csv",
+                                  sep = ",",format = "basket")
+
 # DATA INSPECTION:
 itemLabels(transactions)
 length (transactions)
