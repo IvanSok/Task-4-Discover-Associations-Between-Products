@@ -2,10 +2,12 @@ library("pacman")
 p_load(dplyr, ggplot2,corrplot, GGally, readr,caret,readxl,knitr,
        printr,party,polycor,BBmisc,car,reshape,arules,arulesViz,rstudioapi)
 
+
 # GITHUB SETUP: 
 current_path <- getActiveDocumentContext()$path
 setwd(dirname(dirname(current_path)))
 rm(current_path)
+
 
 # IMPORTING DATASET:
 transactions <- read.transactions("Datasets/ElectronidexTransactions2017.csv", sep = ",",
@@ -18,18 +20,31 @@ inspect(transactions[1:10], itemSep = " + ", setStart = "",
 size (transactions) # Number of items per transaction
 LIST(transactions[10:100]) # Lists the transactions by conversion 
 
+
 # PLOTS:
 itemFrequencyPlot(transactions, horiz = TRUE, 
                   type = "absolute",topN = 20,popCol = TRUE)
 image(sample(transactions, 100))
 
+
 #Creating rules for the transactions
-rules <- apriori (transactions, parameter = list(supp = 0.002, 
-                                                 conf = 0.8,minlen = 2,target = "rules"))
+rules <- apriori (transactions, parameter = list(supp = 0.001, 
+                                                 conf = 0.9,minlen = 2,target = "rules"))
 rules <- rules[-which(is.redundant(rules) == TRUE)]
 inspect(sort(rules,by = "lift"))
 summary(rules)
-plot(rules,jitter = 0)
+plot(rules)
+
+# SORTING RULES BY:
+rules_list <- c("lift", "support", "confidence")
+j <- "## Sorted by"
+
+for (i in rules_list){
+  p <- paste(j,i)
+  print(p)
+  inspect(sort(rules, by = i))
+  
+}
 
 #Loop to get rules for every subset
 itemrules <- list()
