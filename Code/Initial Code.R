@@ -36,6 +36,18 @@ inspect(sort(Rules,by = "lift"))
 summary(Rules)
 plot(Rules,jitter = 0)
 
+# SORTING RULES BY:
+rules_list <- c("lift", "support", "confidence")
+j <- "## Sorted by"
+
+for (i in rules_list){
+  p <- paste(j,i)
+  print(p)
+  inspect(sort(Rules, by = i))
+  
+}
+
+
 #Loop to get rules for every subset
 itemrules <- list()
 rules_loop <- c()
