@@ -30,7 +30,7 @@ image(sample(transactions, 100))
 #Creating rules for the transactions
 rules <- apriori (transactions, parameter = list(supp = 0.0025, 
                                                  conf = 0.8,minlen = 2,target = "rules"))
-rules <- rules[-which(is.redundant(rules) == TRUE)]
+rules <- rules[which(is.redundant(rules) == FALSE)]
 inspect(sort(rules,by = "lift"))
 summary(rules)
 plot(rules)
