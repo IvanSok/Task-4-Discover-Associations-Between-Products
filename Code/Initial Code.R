@@ -10,16 +10,15 @@ rm(current_path)
 
 
 # IMPORTING DATASET:
-transactions <- read.transactions("Datasets/ElectronidexTransactions2017.csv", sep = ",",format = "basket",header = FALSE)
-
-
+transactions <- read.transactions("Datasets/ElectronidexTransactions2017.csv", sep = ",",
+                                  format = "basket",header = FALSE)
 # DATA INSPECTION:
 itemLabels(transactions)
 length (transactions)
 inspect(transactions[1:10], itemSep = " + ", setStart = "",
         setEnd ="", linebreak = FALSE)
 size (transactions) # Number of items per transaction
-LIST(transactions) # Lists the transactions by conversion 
+LIST(transactions[10:100]) # Lists the transactions by conversion 
 
 
 # PLOTS:
@@ -54,5 +53,7 @@ for (i in itemLabels(transactions)) {
   rules_loop <- subset(rules, items %in% i)
   itemrules[[i]] <- rules_loop
 }
-itemrules
+inspect(itemrules$iMac)
 saveRDS(object = itemrules,file = "Models/ItemRulesSubset")
+
+inspectDT(rules)
