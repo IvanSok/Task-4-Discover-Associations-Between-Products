@@ -11,8 +11,9 @@ rm(current_path)
 # IMPORTING DATASET:
 transactions <- read.transactions("Datasets/ElectronidexTransactions2017.csv",
                                   sep = ",",format = "basket")
+itemlevels <- read.csv("Datasets/ItemLevels.csv", sep = ";",header = FALSE, colClasses = 'character')
 
-# DATA INSPECTION:
+                       # DATA INSPECTION:
 itemLabels(transactions)
 length (transactions)
 inspect(transactions[1:10], itemSep = " + ", setStart = "",
@@ -30,6 +31,7 @@ image(sample(transactions, 100))
 #Creating rules for the transactions
 rules <- apriori (transactions, parameter = list(supp = 0.0025, 
                                                  conf = 0.8,minlen = 2,target = "rules"))
+ruleExplorer(rules)
 rules <- rules[which(is.redundant(rules) == FALSE)]
 inspect(sort(rules,by = "lift"))
 summary(rules)
@@ -60,8 +62,6 @@ saveRDS(object = itemrules,file = "Models/ItemRulesSubset")
 
 inspectDT(rules)
 
-
-
 # DUMMIFY THE DATA:
 
 # For existing product attributes:
@@ -72,4 +72,4 @@ str(readyData) #checking if there are any nominal values
 binary_transactions <- as(transactions, "matrix")
 binary_transactions
 
-
+itemlevels <- reorder(itemlevels)
