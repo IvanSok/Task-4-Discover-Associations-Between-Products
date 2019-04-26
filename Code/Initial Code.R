@@ -11,7 +11,6 @@ rm(current_path)
 # IMPORTING DATASET:
 transactions <- read.transactions("Datasets/ElectronidexTransactions2017.csv",
                                   sep = ",",format = "basket")
-
 # DATA INSPECTION:
 itemLabels(transactions)
 length (transactions)
@@ -46,6 +45,17 @@ for (i in rules_list){
   
 }
 
+# Top Rules:
+top.support <- sort(rules, decreasing = TRUE, na.last = NA, by = "support")
+inspect(head(top.support, 10))
+
+top.confidence <- sort(rules, decreasing = TRUE, na.last = NA, by = "confidence")
+inspect(head(top.support, 10))
+
+top.lift <- sort(rules, decreasing = TRUE, na.last = NA, by = "lift")
+inspect(head(top.support, 10))
+
+
 #Loop to get rules for every subset
 itemrules <- list()
 rules_loop <- c()
@@ -54,6 +64,21 @@ for (k in itemLabels(transactions)) {
   itemrules[[k]] <- rules_loop
 }
 inspect(itemrules$iMac)
+
 saveRDS(object = itemrules,file = "Models/ItemRulesSubset")
 
 inspectDT(rules)
+
+
+
+# DUMMIFY THE DATA:
+
+# For existing product attributes:
+newDF <- dummyVars("~.", data = transactions)
+readyData <- data.frame(predict(newDF, newdata = transactions))
+str(readyData) #checking if there are any nominal values
+
+binary_transactions <- as(transactions, "matrix")
+binary_transactions
+
+
