@@ -11,8 +11,9 @@ rm(current_path)
 # IMPORTING DATASET:
 transactions <- read.transactions("Datasets/ElectronidexTransactions2017.csv",
                                   sep = ",",format = "basket")
+itemlevels <- read.csv("Datasets/ItemLevels.csv", sep = ";",header = FALSE, colClasses = 'character')
 
-# DATA INSPECTION:
+                       # DATA INSPECTION:
 itemLabels(transactions)
 length (transactions)
 inspect(transactions[1:10], itemSep = " + ", setStart = "",
@@ -59,3 +60,8 @@ saveRDS(object = itemrules,file = "Models/ItemRulesSubset")
 
 inspectDT(rules)
 
+itemmatrix <- as(transactions,"matrix")
+
+itemlevels <- read.csv("Datasets/ItemLevels.csv", sep = ";",header = FALSE, colClasses = 'character')
+
+itemlevels <- reorder(itemlevels)
