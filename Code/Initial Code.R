@@ -11,6 +11,9 @@ rm(current_path)
 # IMPORTING DATASET:
 transactions <- read.transactions("Datasets/ElectronidexTransactions2017.csv",
                                   sep = ",",format = "basket")
+
+products <- read.csv("Datasets/tabula-ElectronidexItems2017.csv")
+
 # DATA INSPECTION:
 itemLabels(transactions)
 length (transactions)
