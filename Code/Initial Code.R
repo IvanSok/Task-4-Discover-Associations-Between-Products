@@ -11,8 +11,7 @@ rm(current_path)
 # IMPORTING DATASET:
 transactions <- read.transactions("Datasets/ElectronidexTransactions2017.csv",rm.duplicates = FALSE,
                                   sep = ",",format = "basket")
-transactionsdf <- read_csv("Datasets/ElectronidexTransactions2017.csv", 
-                                                           +     col_names = FALSE)
+transactionsdf <- read.csv("Datasets/ElectronidexTransactions2017.csv",header = FALSE,colClasses = 'character')
 
 itemlevels <- read.csv("Datasets/ItemLevels.csv", sep = ";",header = FALSE, colClasses = 'character')
 
@@ -21,9 +20,12 @@ itemLabels(transactions)
 length (transactions)
 inspect(transactions[1:10], itemSep = " + ", setStart = "",
         setEnd ="", linebreak = FALSE)
-size (transactions[10:20]) # Number of items per transaction
-LIST(transactions[10:20]) # Lists the transactions by conversion 
+cat("Number of transactions per item:")
+for(l in 1:max(size(transactions))){
 
+  print(paste(l,"Item -->", length(which(size(transactions)== l))))
+   
+}
 
 # PLOTS:
 itemFrequencyPlot(transactions, horiz = TRUE, 
@@ -33,22 +35,17 @@ image(sample(transactions, 100))
 
 #Creating rules for the transactions
 rules <- apriori (transactions, parameter = list(supp = 0.0015, 
-                                                 conf = 0.6,minlen = 2,target = "rules"))
+                                                 conf = 0.8, minlen = 2,target = "rules"))
 rules <- rules[which(is.redundant(rules) == FALSE)]
-inspect(sort(rules,by = "lift"))
 ruleExplorer(rules)
-summary(rules)
-plot(rules)
 
 # SORTING RULES BY:
 rules_list <- c("lift", "support", "confidence")
-j <- "## Sorted by"
 
 for (i in rules_list){
-  p <- paste(j,i)
-  print(p)
-  inspect(sort(rules, by = i))
-  
+  cat("\nRules Sorted by",i,"\n")
+  inspect(head(sort(rules, by = i,decreasing = TRUE),n = 10)
+          ,itemSep = " + ", setStart = "",setEnd ="", linebreak = FALSE)
 }
 
 #Loop to get rules for every subset
@@ -58,15 +55,7 @@ for (k in itemLabels(transactions)) {
   rules_loop <- subset(rules, items %in% k)
   itemrules[[k]] <- rules_loop
 }
-inspect(itemrules$iMac)
+#inspect(itemrules$iMac)
 saveRDS(object = itemrules,file = "Models/ItemRulesSubset")
 
-inspectDT(rules)
-
 itemmatrix <- as(transactions,"matrix")
-
-itemlevels <- read.csv("Datasets/ItemLevels.csv", sep = ";",header = FALSE, colClasses = 'character')
-
-itemlevels <- reorder(itemlevels)
-sghaiue[1,25] <- head(transactionsdf, 30)
-which(base::duplicated(transactionsdf,incomparables = "NA") == TRUE)
