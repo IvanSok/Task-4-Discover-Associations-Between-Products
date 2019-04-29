@@ -9,18 +9,23 @@ setwd(dirname(dirname(current_path)))
 rm(current_path)
 
 # IMPORTING DATASET:
-transactions <- read.transactions("Datasets/ElectronidexTransactions2017.csv",
+transactions <- read.transactions("Datasets/ElectronidexTransactions2017.csv",rm.duplicates = FALSE,
                                   sep = ",",format = "basket")
+transactionsdf <- read.csv("Datasets/ElectronidexTransactions2017.csv",header = FALSE,colClasses = 'character')
+
 itemlevels <- read.csv("Datasets/ItemLevels.csv", sep = ";",header = FALSE, colClasses = 'character')
 
-                       # DATA INSPECTION:
+# DATA INSPECTION:
 itemLabels(transactions)
 length (transactions)
 inspect(transactions[1:10], itemSep = " + ", setStart = "",
         setEnd ="", linebreak = FALSE)
-size (transactions[10:20]) # Number of items per transaction
-LIST(transactions[10:20]) # Lists the transactions by conversion 
+cat("Number of transactions per item:")
+for(l in 1:max(size(transactions))){
 
+  print(paste(l,"Item -->", length(which(size(transactions)== l))))
+   
+}
 
 # PLOTS:
 itemFrequencyPlot(transactions, horiz = TRUE, 
@@ -29,23 +34,18 @@ image(sample(transactions, 100))
 
 
 #Creating rules for the transactions
-rules <- apriori (transactions, parameter = list(supp = 0.0025, 
-                                                 conf = 0.8,minlen = 2,target = "rules"))
-ruleExplorer(rules)
+rules <- apriori (transactions, parameter = list(supp = 0.0015, 
+                                                 conf = 0.8, minlen = 2,target = "rules"))
 rules <- rules[which(is.redundant(rules) == FALSE)]
-inspect(sort(rules,by = "lift"))
-summary(rules)
-plot(rules)
+ruleExplorer(rules)
 
 # SORTING RULES BY:
 rules_list <- c("lift", "support", "confidence")
-j <- "## Sorted by"
 
 for (i in rules_list){
-  p <- paste(j,i)
-  print(p)
-  inspect(sort(rules, by = i))
-  
+  cat("\nRules Sorted by",i,"\n")
+  inspect(head(sort(rules, by = i,decreasing = TRUE),n = 10)
+          ,itemSep = " + ", setStart = "",setEnd ="", linebreak = FALSE)
 }
 
 
@@ -57,19 +57,6 @@ for (k in itemLabels(transactions)) {
   itemrules[[k]] <- rules_loop
 }
 inspect(itemrules$iMac)
-
 saveRDS(object = itemrules,file = "Models/ItemRulesSubset")
 
 inspectDT(rules)
-
-# DUMMIFY THE DATA:
-
-# For existing product attributes:
-newDF <- dummyVars("~.", data = transactions)
-readyData <- data.frame(predict(newDF, newdata = transactions))
-str(readyData) #checking if there are any nominal values
-
-binary_transactions <- as(transactions, "matrix")
-binary_transactions
-
-itemlevels <- reorder(itemlevels)
