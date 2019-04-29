@@ -47,18 +47,6 @@ for (i in rules_list){
   inspect(head(sort(rules, by = i,decreasing = TRUE),n = 10)
           ,itemSep = " + ", setStart = "",setEnd ="", linebreak = FALSE)
 }
-
-# Top Rules:
-top.support <- sort(rules, decreasing = TRUE, na.last = NA, by = "support")
-inspect(head(top.support, 10))
-
-top.confidence <- sort(rules, decreasing = TRUE, na.last = NA, by = "confidence")
-inspect(head(top.support, 10))
-
-top.lift <- sort(rules, decreasing = TRUE, na.last = NA, by = "lift")
-inspect(head(top.support, 10))
-
-
 #Loop to get rules for every subset
 itemrules <- list()
 rules_loop <- c()
@@ -70,27 +58,3 @@ inspect(itemrules$iMac)
 saveRDS(object = itemrules,file = "Models/ItemRulesSubset")
 
 inspectDT(rules)
-
-<<<<<<<<< Temporary merge branch 1
-
-
-# DUMMIFY THE DATA:
-
-# For existing product attributes:
-newDF <- dummyVars("~.", data = transactions)
-readyData <- data.frame(predict(newDF, newdata = transactions))
-str(readyData) #checking if there are any nominal values
-
-binary_transactions <- as(transactions, "matrix")
-binary_transactions
-
-
-=========
-itemmatrix <- as(transactions,"matrix")
-
-itemlevels <- read.csv("Datasets/ItemLevels.csv", sep = ";",header = FALSE, colClasses = 'character')
-
-itemlevels <- reorder(itemlevels)
-sghaiue[1,25] <- head(transactionsdf, 30)
-which(base::duplicated(transactionsdf,incomparables = "NA") == TRUE)
->>>>>>>>> Temporary merge branch 2
