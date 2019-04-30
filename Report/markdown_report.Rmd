@@ -50,6 +50,114 @@ Using product association insights and the above information, we can conclude th
 
 2) Because there is a strong association between accessories and PCs, everytime a customer buys a PC, using targeted marketing Blackwell could offer bundles or suggestions for customers to also buy accessories, which in most cases will provide extra profit.
 
+````r{starting r,echo = FALSE,  include = FALSE}
+library("pacman")
+p_load(dplyr, ggplot2,corrplot, GGally, readr,caret,readxl,knitr,
+       printr,party,polycor,BBmisc,car,reshape,arules,arulesViz,rstudioapi)
+
+
+# GITHUB SETUP: 
+current_path <- getActiveDocumentContext()$path
+setwd(dirname(dirname(current_path)))
+rm(current_path)
+
+# IMPORTING DATASET:
+transactions <- read.transactions("Datasets/ElectronidexTransactions2017.csv",rm.duplicates = FALSE,
+                                  sep = ",",format = "basket")
+transactionsdf <- read.csv("Datasets/ElectronidexTransactions2017.csv",header = FALSE,colClasses = 'character')
+
+itemlevels <- read.csv("Datasets/ItemLevels.csv", sep = ";",header = FALSE, colClasses = 'character')
+```
+
+````r{Data inpection r,echo = FALSE,  include = TRUE}
+# DATA INSPECTION:
+length (transactions)
+inspect(transactions[1:10], itemSep = " + ", setStart = "",
+        setEnd ="", linebreak = FALSE)
+cat("Number of transactions per item:")
+for(l in 1:max(size(transactions))){
+
+print(paste(l,"Item -->", length(which(size(transactions)== l))))
+   
+}
+```
+````r{Plots By Items,echo = FALSE,  include = TRUE}
+# PLOTS:
+itemFrequencyPlot(transactions, horiz = TRUE, 
+                  type = "absolute",topN = 20,popCol = TRUE)
+image(sample(transactions, 100))
+
+```
+````r{Creating rules for Items r,echo = FALSE,  include = FALSE}
+#Creating rules for the transactions
+rules <- apriori (transactions, parameter = list(supp = 0.0015, 
+                                                 conf = 0.8, minlen = 2,target = "rules"))
+rules <- rules[which(is.redundant(rules) == FALSE)]
+```
+````r{Rule explorer Items r,echo = FALSE,  include = TRUE}
+ruleExplorer(rules)
+```
+````r{Top 10 Rules sorted r,echo = FALSE,  include = TRUE}
+# SORTING RULES BY:
+rules_list <- c("lift", "support", "confidence")
+
+for (i in rules_list){
+  cat("\nRules Sorted by",i,"\n")
+  inspect(head(sort(rules, by = i,decreasing = TRUE),n = 10)
+          ,itemSep = " + ", setStart = "",setEnd ="", linebreak = FALSE)
+}
+```
+````r{Creating data.frame r,echo = FALSE,  include = FALSE}
+transactions@itemInfo$category <- itemlevels[,2]
+transactions_divided <- aggregate(transactions, by = 'category')
+itemLabels(transactions_divided)
+itemFrequencyPlot(transactions_divided, horiz = TRUE, 
+                  type = "absolute",topN = 20,popCol = TRUE)
+rules_divided <- apriori (transactions_divided, parameter = list(supp = 0.01, 
+                                                 conf = 0.8, minlen = 2,target = "rules"))
+rules_divided <- rules_divided[which(is.redundant(rules_divided) == FALSE)]
+```
+
+````r{Loop for rules of Product_Type r,echo = FALSE,  include = FALSE}
+#Loop to get rules_divided for every subset
+itemrules <- list()
+rules_loop <- c()
+for (k in itemLabels(transactions_divided)) {
+  rules_loop <- subset(rules_divided, items %in% k)
+  itemrules[[k]] <- rules_loop
+}
+saveRDS(object = itemrules,file = "Models/ItemRulesSubset")
+```
+````r{Rule explorer Product_Type r,echo = FALSE,  include = TRUE}
+ruleExplorer(rules_divided)
+```
+````r{DF Customer - Company,echo = FALSE,  include = FALSE}
+
+transactions@itemInfo$labels <- paste(itemlevels[,2],itemLabels(transactions))
+divided_df <- as.data.frame(as(transactions, 'matrix'))
+divided_df <- as.data.frame(ifelse(test = divided_df == TRUE,yes = 1,no = 0))
+x <- names(divided_df)
+for (i in 1:ncol(divided_df)){
+  for (j in 1:nrow(divided_df)){
+    if (divided_df[j,i]==1){
+      divided_df[j,i] <- x[i]
+      }
+   }
+}
+for (i in 1:nrow(divided_df)) {
+  vLaptops <- sum(grepl(pattern = "Laptops",x = divided_df[i,]))
+  vDesktop <- sum(grepl(pattern = "Desktop",x = divided_df[i,]))
+  vPrinters <- sum(grepl(pattern = "Printers",x = divided_df[i,]))
+  if(vLaptops>=2 | vDesktop>=2 | vPrinters>=2){
+    divided_df$Retail[i] <- "Company" } else {divided_df$Retail[i] <- "Costumer"}
+}
+```
+````r{Customer/Company Ratio,echo = FALSE,  include = TRUE}
+paste(round((length(which(divided_df$Retail == "Costumer")))/nrow(divided_df)*100,digits = 2),
+          "%"," of transactions are done by Costumers",sep = "")
+paste(round((length(which(divided_df$Retail == "Company")))/nrow(divided_df)*100,digits = 2),
+      "%"," of transactions are done by Companies",sep = "")
+```
 ## Conclusion:
 
 Using association insights and comparing which types of products both Blackwell and Electroindex sell, we can conclude that if Blackwell buys Electroindex, it will benefit the most from selling Electroindex's most sold items such as PCs/Laptops/Desktops bundled with Blackwell's accessories supply. Unless Electroindex mainly deals with businesses, meaning that they have a much larger supply of electronics which might not be necessery for a company like Blackwell, who mainly deal with non business customers, the acquisition of Electroindex will bring more profit in the future. Further discussion is required in order to understand Blackwell's objectives more clearly, which will make it easier to decide wether Blackwell should buy Electroindex.
