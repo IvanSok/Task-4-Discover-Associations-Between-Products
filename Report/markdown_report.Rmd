@@ -35,7 +35,7 @@ To gather all the neccessery insights about Electroindex's business activity, we
 ## Insights and findings:
 While doing market basket analysis, we have discovered some strong associations between Electroindex's products. In particular, a lot of customers who shop at Electroindex will purchase "bundles" of products, mainly being a   
 
-![Electroindex's Products by Frequency](/Users/Alejo/Documents/Ubiqum - Data Analytics/GitKraken/TestProject/Task-4-Discover-Associations-Between-Products/graphs/products by frequency.png)
+![Electroindex's Products by Frequency](/Users/alejomata/Documents/Ubiqum - Data Analytics/GitKraken/TestProject/Task-4-Discover-Associations-Between-Products/graphs/products by frequency.png)
 
 ## Conclusion:
 
