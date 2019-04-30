@@ -14,24 +14,20 @@ output:
 
 ```{r setup, include = FALSE,echo = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
+  collapse = TRUE
 )
 ```
-```{r starting r,echo = FALSE,  include = FALSE}
-library("pacman")
-p_load(dplyr, ggplot2,corrplot, GGally, readr,caret,readxl,knitr,imager,
+
+```{r starting, echo = FALSE,  include = FALSE}
+library(pacman)
+pacman::p_load(dplyr, ggplot2,corrplot, GGally, readr,caret,readxl,knitr,imager,
        printr,party,polycor,BBmisc,car,reshape,arules,arulesViz,rstudioapi)
 
-current_path <- getActiveDocumentContext()$path
-setwd(dirname(dirname(current_path)))
-rm(current_path)
-
-transactions <- read.transactions("Datasets/ElectronidexTransactions2017.csv",rm.duplicates = FALSE,
+transactions <- read.transactions("ElectronidexTransactions2017.csv",rm.duplicates = FALSE,
                                   sep = ",",format = "basket")
-transactionsdf <- read.csv("Datasets/ElectronidexTransactions2017.csv",header = FALSE,colClasses = 'character')
+transactionsdf <- read.csv("ElectronidexTransactions2017.csv",header = FALSE,colClasses = 'character')
 
-itemlevels <- read.csv("Datasets/ItemLevels.csv", sep = ";",header = FALSE, colClasses = 'character')
+itemlevels <- read.csv("ItemLevels.csv", sep = ";",header = FALSE, colClasses = 'character')
 ```
 ## Executive summary:
 
@@ -41,25 +37,20 @@ itemlevels <- read.csv("Datasets/ItemLevels.csv", sep = ";",header = FALSE, colC
 ## Introduction:
 To gather all the neccessery insights about Electroindex's business activity, we have used their online transactions data and a file containing all the electronics that they currently sell. Due to their lack of funding, Electronidex is only able to pull data on the items that customers purchased per their transactions, meaning that we cannot identify whether the same customer made multiple transactions during this time period.
 
-########
-# The dataset includes approximately 10,000 transactions, collected over the last 30 days, 
-########
-
 
 ## Insights and findings:
 
 Using insights from previous analysis of Blackwell's products, we can see that products that have the highest volume sold are accessories and displays, which have shown to have a strong association with desktops and laptops in the Electroindex's data set. 
 
-```{r image 1, echo=TRUE,include=FALSE}
-myimg1 <- load.image("Report/Screen Shot 2019-03-25 at 11.12.13.png")
+```{r pic1, echo=FALSE,include=TRUE}
+myimg1 <- imager::load.image("screenshot.png")
 plot(myimg1,axes = FALSE)
 ```
 
-
 We also know that products that have the highest predicted profitability for Blackwell are Tablets and PCs, shown on the ranked table below:
 
-```{r image 2, echo=TRUE,include=FALSE}
-myimg2 <- load.image("Report/Top 5 profits.png")
+```{r pic2, echo=FALSE,include=TRUE}
+myimg2 <- imager::load.image("Top 5 profits.png")
 plot(myimg2,axes = FALSE)
 ```
 
@@ -69,13 +60,16 @@ Using product association insights and the above information, we can conclude th
 
 2) Because there is a strong association between accessories and PCs, everytime a customer buys a PC, using targeted marketing Blackwell could offer bundles or suggestions for customers to also buy accessories, which in most cases will provide extra profit.
 
-```{r Data inspection r,echo = TRUE,  include = FALSE}
+```{r Data inspection r,echo = FALSE,  include = TRUE}
+cat("Number of transactions\n\n")
 
 length (transactions)
+cat("\n")
 inspect(transactions[1:10], itemSep = " + ", setStart = "",
         setEnd ="", linebreak = FALSE)
-cat("Number of transactions per item:")
-for(l in 1:max(size(transactions))){
+
+cat("Number of transactions per item:","/n")
+for(l in 1:6){
 
 print(paste(l,"Item -->", length(which(size(transactions)== l))))
    }
@@ -85,7 +79,7 @@ While doing market basket analysis, we have discovered some strong associations 
 
 ```{r Plots By Items,echo = FALSE,  include = TRUE}
 itemFrequencyPlot(transactions, horiz = TRUE, 
-                  type = "absolute",topN = 20,popCol = TRUE)
+                  type = "absolute",topN = 13,popCol = TRUE)
 ```
 ```{r Creating rules for Items r,echo = FALSE,  include = FALSE}
 #Creating rules for the transactions
@@ -93,9 +87,7 @@ rules <- apriori (transactions, parameter = list(supp = 0.0015,
                                                  conf = 0.8, minlen = 2,target = "rules"))
 rules <- rules[which(is.redundant(rules) == FALSE)]
 ```
-```{r Rule explorer Items r,echo = FALSE,  include = TRUE}
-ruleExplorer(rules)
-```
+
 ```{r Top 10 Rules sorted r,echo = FALSE,  include = TRUE}
 # SORTING RULES BY:
 rules_list <- c("lift", "support", "confidence")
@@ -125,11 +117,8 @@ for (k in itemLabels(transactions_divided)) {
   rules_loop <- subset(rules_divided, items %in% k)
   itemrules[[k]] <- rules_loop
 }
-saveRDS(object = itemrules,file = "Models/ItemRulesSubset")
 ```
-```{r Rule explorer Product_Type r,echo = FALSE,  include = TRUE}
-ruleExplorer(rules_divided)
-```
+
 ```{r DF Customer - Company,echo = FALSE,  include = FALSE}
 
 transactions@itemInfo$labels <- paste(itemlevels[,2],itemLabels(transactions))
