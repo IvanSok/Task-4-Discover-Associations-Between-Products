@@ -1,12 +1,15 @@
 ---
-title: "Chapter 2 Task 4: Discover Associations Between Products"
+title: "Customer Brand Preferences Report for Blackwell Electronics"
 author: "Ivan Sokolenko"
-date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Vignette Title}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+date: "12/04/2019"#"`r Sys.Date()`"
+output: 
+   rmdformats::readthedown:
+   thumbnails: true
+   lightbox: true
+   toc_depth: 3
+   gallery: true
+   highlight: tango
+
 ---
 
 ```{r setup, include = FALSE}
@@ -16,50 +19,44 @@ knitr::opts_chunk$set(
 )
 ```
 
+## Executive summary:
+Blackwell's sales team engaged a market research firm to conduct a survey of its existing customers. One of the objectives of the survey was to find out which of the two brands of computers Blackwell's customers prefer based on their salary, age, education level, credit, zipcode and car type. Unfortunately, the answer to the brand preference question was not properly captured for all of the respondents. To be precise, 10.000 surveys have been fully completed with brand preference filled out and 5.000 surveys have brand preference missing. By comparing the distributions of attributes for complete and incomplete surveys, my conclusion is that the two datasets are very similar and we can predict the brand preference for the incomplete survey with high confidence, but due to the way the data was sampled, it is not a realistic representation of the population, hence predicting brand preference for incomplete survey won't be a good indicator of which brand Blackwell should partner up with. A less stratified sampling method should be implemented in order to give more meaningful insights into Blackwell's customer preferences.
+
+*****
+
+## Preprocessing:
+In order to predict brand preference based on consumer's attributes, it is important to understand which attributes have the most predictive power. The simplest way to see this is by plotting a decision tree. The plot below shows that attributes "age" and "salary" are the most important when predicting brand preference:
+
+![Attributes with the most predictive power](/Users/Ivan/Desktop/UBIQUM/Task 5 Predict which Brand of Products Customers Prefer /Decision tree.png)
+
+In order to confirm the outcome of decision tree, we can plot distributions of "car", "elevel" and "zipcode", coloured by brand. As we can see below, there is not much difference in brand preference and hence these three attributes don't provide any useful information for making brand predictions. All future predictions will be done using only "age" and "salary" attributes.
 
 
-## Brief summary:
+![Car distribution by brand](/Users/Ivan/Desktop/UBIQUM/Task 5 Predict which Brand of Products Customers Prefer /car_distribution_bybrand.png)
 
-In this report I will be showing the following results:
-  
-- Predictions concerning how far a certain car can travel based on speed. 
-- Predictions concerning the petal length through using the petal’s width.
-- The errors/warning messages that I encountered and how I overcame them.
+![Education level distribution by brand](/Users/Ivan/Desktop/UBIQUM/Task 5 Predict which Brand of Products Customers Prefer /elevel_distribution_bybrand.png)
 
-## Styles
+![Zipcode distribution by brand](/Users/Ivan/Desktop/UBIQUM/Task 5 Predict which Brand of Products Customers Prefer /zipcode_distribution_bybrand.png)
 
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+## Method and evaluation:
+To make predictions for the incomplete survey I have tried a variety of classification models, namely PLSDA, logistic regression, k-NN, random forest and C5.0. The best model accuracy has been achieved by using C5.0 model, with accuracy = 0.92 and Kappa = 0.84. This means that the data is well understood and we can be very confident when making predictions for the incomplete survey. 
+It is very important to understand that the only reason why we are confident in predicting brand for incomplete survey is because the two datasets are very similar, this can be seen by the following distribution density plots of "age" and "salary" attributes, which are the main attributes for our predictions, for complete and incomplete surveys.
 
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
+![Age distribution between two surveys](/Users/Ivan/Desktop/UBIQUM/Task 5 Predict which Brand of Products Customers Prefer /age_distribution_across_surveys.png)
+![Salary distribution between two surveys](/Users/Ivan/Desktop/UBIQUM/Task 5 Predict which Brand of Products Customers Prefer /salary_distribution_across_surveys.png)
 
-## Figures
+This means that completed survey data can be used to make accurate predictions for the incomplete survey, but it doesn't mean that it will be accurate on a different type of dataset, especially taking into account the fact that the sampling method for data collection is overstratified.
 
-The figure sizes have been customised so that you can easily put two images side-by-side. 
 
-```{r}
-plot(1:5)
-plot(10:1)
-```
+## Insights:
+Although the data was not well collected, I managed to find out two insights that might be useful for Blackwell. Using complete data set I have analysed customer's salary and brand preference, using the box plot we can see that customers with average salary of $101571.3 are more likely do buy Sony than Acer.
 
-You can enable figure captions by `fig_caption: yes` in YAML:
+![Salary per brand](/Users/Ivan/Desktop/UBIQUM/Task 5 Predict which Brand of Products Customers Prefer /salary_brand_boxplot.png)
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
 
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
 
-## More Examples
 
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
+## Conclusion:
+Although we can make accurate brand predictions for the incomplete survey, because both complete and incomplete datasets are very similar, due to a bad sampling method used to collect the data and since it becomes unrepresentative of the real population, it is very hard to understand which brand Blackwell should partner up with. A different sampling method should be implemented in order to reach a definite conclusion as to which brand is better for Blackwell.
 
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
-```
 
-Also a quote using `>`:
-
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
