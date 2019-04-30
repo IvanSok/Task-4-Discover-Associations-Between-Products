@@ -18,7 +18,23 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
+````r{starting r,echo = FALSE,  include = FALSE}
+library("pacman")
+p_load(dplyr, ggplot2,corrplot, GGally, readr,caret,readxl,knitr,
+       printr,party,polycor,BBmisc,car,reshape,arules,arulesViz,rstudioapi)
 
+
+# GITHUB SETUP: 
+current_path <- getActiveDocumentContext()$path
+setwd(dirname(dirname(current_path)))
+rm(current_path)
+# IMPORTING DATASET:
+transactions <- read.transactions("Datasets/ElectronidexTransactions2017.csv",rm.duplicates = FALSE,
+                                  sep = ",",format = "basket")
+transactionsdf <- read.csv("Datasets/ElectronidexTransactions2017.csv",header = FALSE,colClasses = 'character')
+
+itemlevels <- read.csv("Datasets/ItemLevels.csv", sep = ";",header = FALSE, colClasses = 'character')
+```
 ## Executive summary:
 
 
@@ -33,41 +49,20 @@ To gather all the neccessery insights about Electroindex's business activity, we
 
 
 ## Insights and findings:
-While doing market basket analysis, we have discovered some strong associations between Electroindex's products. In particular, a lot of customers who shop at Electroindex will purchase "bundles" of products, mainly as a combination of desktop/laptop and accessories. We have also found out that Electroindex's most sold products are desktops and laptops, which you can see on the graph below:
-![Most sold products](/Users/Ivan/Desktop/UBIQUM/Chapter 2/Task 4/Task-4-Discover-Associations-Between-Products/graphs/products by frequency.png)
 
 Using insights from previous analysis of Blackwell's products, we can see that products that have the highest volume sold are accessories and displays, which have shown to have a strong association with desktops and laptops in the Electroindex's data set. 
 
-![Sales volume ranking for Blackwell's products](/Users/Ivan/Desktop/UBIQUM/Chapter 2/Task 4/Task-4-Discover-Associations-Between-Products/graphs/Screen Shot 2019-03-25 at 11.12.13.png)
+![Sales volume ranking for Blackwell's products](/graphs/Screen Shot 2019-03-25 at 11.12.13.png)
 
 We also know that products that have the highest predicted profitability for Blackwell are Tablets and PCs, shown on the ranked table below:
 
-![Sales volume ranking for Blackwell's products](/Users/Ivan/Desktop/UBIQUM/Chapter 2/Task 4/Task-4-Discover-Associations-Between-Products/graphs/Top 5 profits.png)
+![Sales volume ranking for Blackwell's products](/graphs/Top 5 profits.png)
 
 Using product association insights and the above information, we can conclude that Blackwell can gain profits in the following way if it decides to buy Electroindex:
 
 1) Since PCs have the most predicted profit for Blackwell and Electroindex's most sold items are PCs, it should use Electroindex's products such as PCs/Desktops/Laptops as it's product supply and bundle them with already existing Blackwell's accessories.
 
 2) Because there is a strong association between accessories and PCs, everytime a customer buys a PC, using targeted marketing Blackwell could offer bundles or suggestions for customers to also buy accessories, which in most cases will provide extra profit.
-
-````r{starting r,echo = FALSE,  include = FALSE}
-library("pacman")
-p_load(dplyr, ggplot2,corrplot, GGally, readr,caret,readxl,knitr,
-       printr,party,polycor,BBmisc,car,reshape,arules,arulesViz,rstudioapi)
-
-
-# GITHUB SETUP: 
-current_path <- getActiveDocumentContext()$path
-setwd(dirname(dirname(current_path)))
-rm(current_path)
-
-# IMPORTING DATASET:
-transactions <- read.transactions("Datasets/ElectronidexTransactions2017.csv",rm.duplicates = FALSE,
-                                  sep = ",",format = "basket")
-transactionsdf <- read.csv("Datasets/ElectronidexTransactions2017.csv",header = FALSE,colClasses = 'character')
-
-itemlevels <- read.csv("Datasets/ItemLevels.csv", sep = ";",header = FALSE, colClasses = 'character')
-```
 
 ````r{Data inpection r,echo = FALSE,  include = TRUE}
 # DATA INSPECTION:
@@ -81,12 +76,11 @@ print(paste(l,"Item -->", length(which(size(transactions)== l))))
    
 }
 ```
+While doing market basket analysis, we have discovered some strong associations between Electroindex's products. In particular, a lot of customers who shop at Electroindex will purchase "bundles" of products, mainly as a combination of desktop/laptop and accessories. We have also found out that Electroindex's most sold products are desktops and laptops, which you can see on the graph below:
 ````r{Plots By Items,echo = FALSE,  include = TRUE}
 # PLOTS:
 itemFrequencyPlot(transactions, horiz = TRUE, 
                   type = "absolute",topN = 20,popCol = TRUE)
-image(sample(transactions, 100))
-
 ```
 ````r{Creating rules for Items r,echo = FALSE,  include = FALSE}
 #Creating rules for the transactions
