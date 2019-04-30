@@ -1,15 +1,17 @@
 ---
 title: "Market Basket Analysis Report"
 author: "Ivan Sokolenko, Alejo Gonzalez Mata, Joan Figueras"
-date: "12/04/2019"#"`r Sys.Date()`"
-output: 
-   rmdformats::readthedown:
-   thumbnails: true
-   lightbox: true
-   toc_depth: 3
-   gallery: true
-   highlight: tango
-
+date: "12/04/2019"
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: '4'
+  html_document:
+    toc: yes
+    toc_depth: 4
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
 ---
 
 ```{r setup, include = FALSE,echo = FALSE}
@@ -31,6 +33,7 @@ itemlevels <- read.csv("ItemLevels.csv", sep = ";",header = FALSE, colClasses = 
 ```
 ## Executive summary:
 
+From what we observed, obtaining the company Electroindex is a good idea for Blackwell. Both companies are complementary and would benefit for the high amount of sales from respective diferent products. Accesories are high on Blackwell's side while Computer are high in Electroindex, doing cross-selling between the companies would benefit both, therefore, we recommend to specialize each company in what they sell best and merge.
 
 *****
 
@@ -94,7 +97,7 @@ rules_list <- c("lift", "support", "confidence")
 
 for (i in rules_list){
   cat("\nRules Sorted by",i,"\n")
-  inspect(head(sort(rules, by = i,decreasing = TRUE),n = 10)
+  inspect(head(sort(rules, by = i,decreasing = TRUE),n = 5)
           ,itemSep = " + ", setStart = "",setEnd ="", linebreak = FALSE)
 }
 ```
@@ -102,8 +105,7 @@ for (i in rules_list){
 transactions@itemInfo$category <- itemlevels[,2]
 transactions_divided <- aggregate(transactions, by = 'category')
 itemLabels(transactions_divided)
-itemFrequencyPlot(transactions_divided, horiz = TRUE, 
-                  type = "absolute",topN = 20,popCol = TRUE)
+
 rules_divided <- apriori (transactions_divided, parameter = list(supp = 0.01, 
                                                  conf = 0.8, minlen = 2,target = "rules"))
 rules_divided <- rules_divided[which(is.redundant(rules_divided) == FALSE)]
@@ -117,6 +119,11 @@ for (k in itemLabels(transactions_divided)) {
   rules_loop <- subset(rules_divided, items %in% k)
   itemrules[[k]] <- rules_loop
 }
+```
+
+```{r Product type plot ,echo = FALSE,  include = TRUE}
+itemFrequencyPlot(transactions_divided, horiz = TRUE, 
+                  type = "absolute",topN = 10,popCol = TRUE)
 ```
 
 ```{r DF Customer - Company,echo = FALSE,  include = FALSE}
