@@ -1,0 +1,42 @@
+---
+title: "Market Basket Analysis Report"
+author: "Ivan Sokolenko, Alejo Gonzalez Mata, Joan Figueras"
+date: "12/04/2019"#"`r Sys.Date()`"
+output: 
+   rmdformats::readthedown:
+   thumbnails: true
+   lightbox: true
+   toc_depth: 3
+   gallery: true
+   highlight: tango
+
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Executive summary:
+
+
+*****
+
+## Introduction:
+To gather all the neccessery insights about Electroindex's business activity, we have used their online transactions data and a file containing all the electronics that they currently sell. Due to their lack of funding, Electronidex is only able to pull data on the items that customers purchased per their transactions, meaning that we cannot identify customer ID, wether they bought multiples of the same product or not.
+
+########
+# The dataset includes approximately 10,000 transactions, collected over the last 30 days, 
+########
+
+
+## Insights and findings:
+While doing market basket analysis, we have discovered some strong associations between Electroindex's products. In particular, a lot of customers who shop at Electroindex will purchase "bundles" of products, mainly being a   
+
+
+## Conclusion:
+
+
+
