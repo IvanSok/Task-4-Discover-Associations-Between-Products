@@ -55,23 +55,36 @@ itemFrequencyPlot(transactions_divided, horiz = TRUE,
                   type = "absolute",topN = 20,popCol = TRUE)
 rules_divided <- apriori (transactions_divided, parameter = list(supp = 0.01, 
                                                  conf = 0.8, minlen = 2,target = "rules"))
-rules_divided <- rules_divided[which(is.redundant(rules_divided) == FALSE)]
-ruleExplorer(rules_divided)
 
+rules_divided <- rules_divided[which(is.redundant(rules_divided) == FALSE)]
 #Loop to get rules_divided for every subset
 itemrules <- list()
 rules_loop <- c()
 for (k in itemLabels(transactions_divided)) {
   rules_loop <- subset(rules_divided, items %in% k)
   itemrules[[k]] <- rules_loop
-}
+  }
 saveRDS(object = itemrules,file = "Models/ItemRulesSubset")
-ruleExplorer(rules_divided)
-
-divided_df <- as(transactions, 'matrix')
-divided_df <- itemlevels[-which(itemLabels(transactions) %in% itemlevels[,1]),]
-for (f in 1:length(itemLabels(transactions_divided))) {
-  names(divided_df) <- itemLabels(transactions_divided)
+transactions@itemInfo$labels <- paste(itemlevels[,2],itemLabels(transactions))
+divided_df <- as.data.frame(as(transactions, 'matrix'))
+divided_df <- as.data.frame(ifelse(test = divided_df == TRUE,yes = 1,no = 0))
+x <- names(divided_df)
+for (i in 1:ncol(divided_df)){
+  for (j in 1:nrow(divided_df)){
+    if (divided_df[j,i]==1){
+      divided_df[j,i] <- x[i]
+      }
+   }
 }
-itemlevels[-which(itemLabels(transactions) %in% itemlevels[,1]),]
-itemlevels[-which(itemlevels[,1] %in% itemLabels(transactions)),]
+for (i in 1:nrow(divided_df)) {
+  vLaptops <- sum(grepl(pattern = "Laptops",x = divided_df[i,]))
+  vDesktop <- sum(grepl(pattern = "Desktop",x = divided_df[i,]))
+  vPrinters <- sum(grepl(pattern = "Printers",x = divided_df[i,]))
+  if(vLaptops>=2 | vDesktop>=2 | vPrinters>=2){
+    divided_df$Retail[i] <- "Company" } else {divided_df$Retail[i] <- "Costumer"}
+}
+
+paste(round((length(which(divided_df$Retail == "Costumer")))/nrow(divided_df)*100,digits = 2),
+          "%"," of transactions are done by Costumers",sep = "")
+paste(round((length(which(divided_df$Retail == "Company")))/nrow(divided_df)*100,digits = 2),
+      "%"," of transactions are done by Companies",sep = "")
