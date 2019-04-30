@@ -37,8 +37,8 @@ image(sample(transactions, 100))
 rules <- apriori (transactions, parameter = list(supp = 0.0015, 
                                                  conf = 0.8, minlen = 2,target = "rules"))
 rules <- rules[which(is.redundant(rules) == FALSE)]
+#ruleExplorer(rules)
 ruleExplorer(rules)
-
 # SORTING RULES BY:
 rules_list <- c("lift", "support", "confidence")
 
@@ -47,14 +47,31 @@ for (i in rules_list){
   inspect(head(sort(rules, by = i,decreasing = TRUE),n = 10)
           ,itemSep = " + ", setStart = "",setEnd ="", linebreak = FALSE)
 }
-#Loop to get rules for every subset
+
+transactions@itemInfo$category <- itemlevels[,2]
+transactions_divided <- aggregate(transactions, by = 'category')
+itemLabels(transactions_divided)
+itemFrequencyPlot(transactions_divided, horiz = TRUE, 
+                  type = "absolute",topN = 20,popCol = TRUE)
+rules_divided <- apriori (transactions_divided, parameter = list(supp = 0.01, 
+                                                 conf = 0.8, minlen = 2,target = "rules"))
+rules_divided <- rules_divided[which(is.redundant(rules_divided) == FALSE)]
+ruleExplorer(rules_divided)
+
+#Loop to get rules_divided for every subset
 itemrules <- list()
 rules_loop <- c()
-for (k in itemLabels(transactions)) {
-  rules_loop <- subset(rules, items %in% k)
+for (k in itemLabels(transactions_divided)) {
+  rules_loop <- subset(rules_divided, items %in% k)
   itemrules[[k]] <- rules_loop
 }
-inspect(itemrules$iMac)
 saveRDS(object = itemrules,file = "Models/ItemRulesSubset")
+ruleExplorer(rules_divided)
 
-inspectDT(rules)
+divided_df <- as(transactions, 'matrix')
+divided_df <- itemlevels[-which(itemLabels(transactions) %in% itemlevels[,1]),]
+for (f in 1:length(itemLabels(transactions_divided))) {
+  names(divided_df) <- itemLabels(transactions_divided)
+}
+itemlevels[-which(itemLabels(transactions) %in% itemlevels[,1]),]
+itemlevels[-which(itemlevels[,1] %in% itemLabels(transactions)),]
