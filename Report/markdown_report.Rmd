@@ -52,6 +52,6 @@ Using product association insights and the above information, we can conclude th
 
 ## Conclusion:
 
-Using association insights and comparing which types of products both Blackwell and Electroindex sell, we can conclude that if Blackwell buys Electroindex, it will benefit the most from selling Electroindex's most sold items such as PCs/Laptops/Desktops bundled with Blackwell's accessories supply. Unless Electroindex mainly deals with businesses, meaning that they have a much larger supply of electronics which might not be necessery for a company like Blackwell, who mainly deal with non business customers, the acquisition of Electroindex will bring more profit in the future.
+Using association insights and comparing which types of products both Blackwell and Electroindex sell, we can conclude that if Blackwell buys Electroindex, it will benefit the most from selling Electroindex's most sold items such as PCs/Laptops/Desktops bundled with Blackwell's accessories supply. Unless Electroindex mainly deals with businesses, meaning that they have a much larger supply of electronics which might not be necessery for a company like Blackwell, who mainly deal with non business customers, the acquisition of Electroindex will bring more profit in the future. Further discussion is required in order to understand Blackwell's objectives more clearly, which will make it easier to decide wether Blackwell should buy Electroindex.
 
 
