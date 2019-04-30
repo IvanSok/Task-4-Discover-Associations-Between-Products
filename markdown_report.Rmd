@@ -3,15 +3,12 @@ title: "Market Basket Analysis Report"
 author: "Ivan Sokolenko, Alejo Gonzalez Mata, Joan Figueras"
 date: "12/04/2019"
 output:
-  pdf_document:
-    toc: yes
-    toc_depth: '4'
-  html_document:
-    toc: yes
-    toc_depth: 4
-    toc_float:
-      collapsed: no
-      smooth_scroll: yes
+   rmdformats::readthedown:
+   thumbnails: true
+   lightbox: true
+   toc_depth: 3
+   gallery: true
+   highlight: tango
 ---
 
 ```{r setup, include = FALSE,echo = FALSE}
