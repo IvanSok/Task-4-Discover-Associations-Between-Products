@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
 *****
 
 ## Introduction:
-To gather all the neccessery insights about Electroindex's business activity, we have used their online transactions data and a file containing all the electronics that they currently sell. Due to their lack of funding, Electronidex is only able to pull data on the items that customers purchased per their transactions, meaning that we cannot identify customer ID, wether they bought multiples of the same product or not.
+To gather all the neccessery insights about Electroindex's business activity, we have used their online transactions data and a file containing all the electronics that they currently sell. Due to their lack of funding, Electronidex is only able to pull data on the items that customers purchased per their transactions, meaning that we cannot identify whether the same customer made multiple transactions during this time period.
 
 ########
 # The dataset includes approximately 10,000 transactions, collected over the last 30 days, 
