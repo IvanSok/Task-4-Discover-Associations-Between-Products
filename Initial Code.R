@@ -9,11 +9,11 @@ setwd(dirname(dirname(current_path)))
 rm(current_path)
 
 # IMPORTING DATASET:
-transactions <- read.transactions("Datasets/ElectronidexTransactions2017.csv",rm.duplicates = FALSE,
+transactions <- read.transactions("ElectronidexTransactions2017.csv",rm.duplicates = FALSE,
                                   sep = ",",format = "basket")
-transactionsdf <- read.csv("Datasets/ElectronidexTransactions2017.csv",header = FALSE,colClasses = 'character')
+transactionsdf <- read.csv("ElectronidexTransactions2017.csv",header = FALSE,colClasses = 'character')
 
-itemlevels <- read.csv("Datasets/ItemLevels.csv", sep = ";",header = FALSE, colClasses = 'character')
+itemlevels <- read.csv("ItemLevels.csv", sep = ";",header = FALSE, colClasses = 'character')
 
 # DATA INSPECTION:
 itemLabels(transactions)

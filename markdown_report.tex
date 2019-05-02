@@ -94,6 +94,14 @@
 }
 \subsection{Executive summary:}\label{executive-summary}
 
+From what we observed, obtaining the company Electroindex is a good idea
+for Blackwell. Both companies are complementary and would benefit for
+the high amount of sales from respective diferent products. Accesories
+are high on Blackwell's side while Computer are high in Electroindex,
+doing cross-selling between the companies would benefit both, therefore,
+we recommend to specialize each company in what they sell best and
+merge.
+
 \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
 
 \subsection{Introduction:}\label{introduction}
@@ -173,77 +181,68 @@ and laptops, which you can see on the graph below:
 \begin{verbatim}
 ## 
 ## Rules Sorted by lift 
-##      lhs                                                                                     
-## [1]  Dell KM117 Wireless Keyboard & Mouse + iPhone Charger Cable                             
-## [2]  HP Monitor + iMac + Koss Home Headphones                                                
-## [3]  3-Button Mouse + Acer Desktop + ASUS Monitor                                            
-## [4]  Acer Aspire + Dell Desktop + iMac + ViewSonic Monitor                                   
-## [5]  Epson Printer + iMac + Lenovo Desktop Computer + ViewSonic Monitor                      
-## [6]  Dell Desktop + HP Monitor + Lenovo Desktop Computer + ViewSonic Monitor                 
-## [7]  Etekcity Power Extension Cord Cable + iMac + Lenovo Desktop Computer + ViewSonic Monitor
-## [8]  3-Button Mouse + Acer Aspire + ViewSonic Monitor                                        
-## [9]  Apple Magic Keyboard + Epson Printer + iMac + Lenovo Desktop Computer                   
-## [10] Computer Game + Dell Desktop + ViewSonic Monitor                                        
-##         rhs                     support     confidence lift     count
-## [1]  => Apple MacBook Air       0.002033554 0.9523810  6.122004 20   
-## [2]  => Lenovo Desktop Computer 0.001525165 0.8823529  5.960124 15   
-## [3]  => HP Laptop               0.001525165 0.9375000  4.829917 15   
-## [4]  => HP Laptop               0.003762074 0.9024390  4.649286 37   
-## [5]  => HP Laptop               0.001728521 0.8947368  4.609605 17   
-## [6]  => HP Laptop               0.001728521 0.8947368  4.609605 17   
-## [7]  => HP Laptop               0.001626843 0.8888889  4.579477 16   
-## [8]  => HP Laptop               0.001525165 0.8823529  4.545805 15   
-## [9]  => HP Laptop               0.001525165 0.8823529  4.545805 15   
-## [10] => HP Laptop               0.002643620 0.8666667  4.464990 26   
+##     lhs                                                                  
+## [1] Dell KM117 Wireless Keyboard & Mouse + iPhone Charger Cable        =>
+## [2] HP Monitor + iMac + Koss Home Headphones                           =>
+## [3] 3-Button Mouse + Acer Desktop + ASUS Monitor                       =>
+## [4] Acer Aspire + Dell Desktop + iMac + ViewSonic Monitor              =>
+## [5] Epson Printer + iMac + Lenovo Desktop Computer + ViewSonic Monitor =>
+##     rhs                     support     confidence lift     count
+## [1] Apple MacBook Air       0.002033554 0.9523810  6.122004 20   
+## [2] Lenovo Desktop Computer 0.001525165 0.8823529  5.960124 15   
+## [3] HP Laptop               0.001525165 0.9375000  4.829917 15   
+## [4] HP Laptop               0.003762074 0.9024390  4.649286 37   
+## [5] HP Laptop               0.001728521 0.8947368  4.609605 17   
 ## 
 ## Rules Sorted by support 
-##      lhs                                                                         
-## [1]  Acer Aspire + Dell Desktop + ViewSonic Monitor                              
-## [2]  Acer Aspire + Dell Desktop + iMac + ViewSonic Monitor                       
-## [3]  Acer Desktop + Dell Desktop + iMac + ViewSonic Monitor                      
-## [4]  Dell Desktop + Mackie CR Speakers                                           
-## [5]  Computer Game + Dell Desktop + ViewSonic Monitor                            
-## [6]  Dell Desktop + HP Black & Tri-color Ink                                     
-## [7]  CYBERPOWER Gamer Desktop + HP Black & Tri-color Ink                         
-## [8]  ASUS 2 Monitor + ASUS Monitor + Lenovo Desktop Computer                     
-## [9]  ASUS 2 Monitor + Dell Desktop + Microsoft Office Home and Student 2016      
-## [10] Apple Magic Keyboard + Dell Desktop + Microsoft Office Home and Student 2016
-##         rhs       support     confidence lift     count
-## [1]  => HP Laptop 0.005287239 0.8125000  4.185928 52   
-## [2]  => HP Laptop 0.003762074 0.9024390  4.649286 37   
-## [3]  => HP Laptop 0.003253686 0.8000000  4.121530 32   
-## [4]  => iMac      0.002643620 0.8666667  3.383750 26   
-## [5]  => HP Laptop 0.002643620 0.8666667  4.464990 26   
-## [6]  => iMac      0.002541942 0.8064516  3.148651 25   
-## [7]  => iMac      0.002440264 0.8000000  3.123462 24   
-## [8]  => iMac      0.002440264 0.8000000  3.123462 24   
-## [9]  => iMac      0.002440264 0.8275862  3.231167 24   
-## [10] => iMac      0.002440264 0.8275862  3.231167 24   
+##     lhs                                                       rhs      
+## [1] Acer Aspire + Dell Desktop + ViewSonic Monitor         => HP Laptop
+## [2] Acer Aspire + Dell Desktop + iMac + ViewSonic Monitor  => HP Laptop
+## [3] Acer Desktop + Dell Desktop + iMac + ViewSonic Monitor => HP Laptop
+## [4] Dell Desktop + Mackie CR Speakers                      => iMac     
+## [5] Computer Game + Dell Desktop + ViewSonic Monitor       => HP Laptop
+##     support     confidence lift     count
+## [1] 0.005287239 0.8125000  4.185928 52   
+## [2] 0.003762074 0.9024390  4.649286 37   
+## [3] 0.003253686 0.8000000  4.121530 32   
+## [4] 0.002643620 0.8666667  3.383750 26   
+## [5] 0.002643620 0.8666667  4.464990 26   
 ## 
 ## Rules Sorted by confidence 
-##      lhs                                                                                             
-## [1]  Apple Magic Keyboard + Rii LED Gaming Keyboard & Mouse Combo + ViewSonic Monitor                
-## [2]  Etekcity Power Extension Cord Cable + HP Laptop + Lenovo Desktop Computer + ViewSonic Monitor   
-## [3]  Dell KM117 Wireless Keyboard & Mouse + iPhone Charger Cable                                     
-## [4]  Dell Desktop + Lenovo Desktop Computer + Samsung Monitor + ViewSonic Monitor                    
-## [5]  ASUS 2 Monitor + Dell Desktop + Lenovo Desktop Computer + Microsoft Office Home and Student 2016
-## [6]  ASUS Desktop + Dell Desktop + iPad Pro                                                          
-## [7]  3-Button Mouse + Acer Desktop + ASUS Monitor                                                    
-## [8]  ASUS Monitor + Dell Desktop + Lenovo Desktop Computer + ViewSonic Monitor                       
-## [9]  Acer Aspire + Dell Desktop + iMac + ViewSonic Monitor                                           
-## [10] Epson Printer + iMac + Lenovo Desktop Computer + ViewSonic Monitor                              
-##         rhs               support     confidence lift     count
-## [1]  => iMac              0.001728521 1.0000000  3.904327 17   
-## [2]  => iMac              0.001626843 1.0000000  3.904327 16   
-## [3]  => Apple MacBook Air 0.002033554 0.9523810  6.122004 20   
-## [4]  => iMac              0.001830198 0.9473684  3.698836 18   
-## [5]  => iMac              0.001728521 0.9444444  3.687420 17   
-## [6]  => iMac              0.001525165 0.9375000  3.660307 15   
-## [7]  => HP Laptop         0.001525165 0.9375000  4.829917 15   
-## [8]  => iMac              0.001931876 0.9047619  3.532486 19   
-## [9]  => HP Laptop         0.003762074 0.9024390  4.649286 37   
-## [10] => HP Laptop         0.001728521 0.8947368  4.609605 17
+##     lhs                                                                                             
+## [1] Apple Magic Keyboard + Rii LED Gaming Keyboard & Mouse Combo + ViewSonic Monitor                
+## [2] Etekcity Power Extension Cord Cable + HP Laptop + Lenovo Desktop Computer + ViewSonic Monitor   
+## [3] Dell KM117 Wireless Keyboard & Mouse + iPhone Charger Cable                                     
+## [4] Dell Desktop + Lenovo Desktop Computer + Samsung Monitor + ViewSonic Monitor                    
+## [5] ASUS 2 Monitor + Dell Desktop + Lenovo Desktop Computer + Microsoft Office Home and Student 2016
+##        rhs               support     confidence lift     count
+## [1] => iMac              0.001728521 1.0000000  3.904327 17   
+## [2] => iMac              0.001626843 1.0000000  3.904327 16   
+## [3] => Apple MacBook Air 0.002033554 0.9523810  6.122004 20   
+## [4] => iMac              0.001830198 0.9473684  3.698836 18   
+## [5] => iMac              0.001728521 0.9444444  3.687420 17
 \end{verbatim}
+
+\includegraphics{markdown_report_files/figure-latex/Product type plot -1.pdf}
+
+\begin{verbatim}
+## [1] "58.69% of transactions are done by Costumers"
+## [1] "41.31% of transactions are done by Companies"
+\end{verbatim}
+
+\subsection{Conclusion:}\label{conclusion}
+
+Using association insights and comparing which types of products both
+Blackwell and Electroindex sell, we can conclude that if Blackwell buys
+Electroindex, it will benefit the most from selling Electroindex's most
+sold items such as PCs/Laptops/Desktops bundled with Blackwell's
+accessories supply. Unless Electroindex mainly deals with businesses,
+meaning that they have a much larger supply of electronics which might
+not be necessery for a company like Blackwell, who mainly deal with non
+business customers, the acquisition of Electroindex will bring more
+profit in the future. Further discussion is required in order to
+understand Blackwell's objectives more clearly, which will make it
+easier to decide wether Blackwell should buy Electroindex.
 
 
 \end{document}
