@@ -1,0 +1,166 @@
+---
+title: "Market Basket Analysis Report"
+author: "Ivan Sokolenko, Alejo Gonzalez Mata, Joan Figueras"
+date: "12/04/2019"
+output:
+   rmdformats::readthedown:
+   thumbnails: true
+   lightbox: true
+   toc_depth: 3
+   gallery: true
+   highlight: tango
+---
+
+```{r setup, include = FALSE,echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE
+)
+```
+
+```{r starting, echo = FALSE,  include = FALSE}
+library(pacman)
+pacman::p_load(dplyr, ggplot2,corrplot, GGally, readr,caret,readxl,knitr,imager,
+       printr,party,polycor,BBmisc,car,reshape,arules,arulesViz,rstudioapi)
+
+transactions <- read.transactions("ElectronidexTransactions2017.csv",rm.duplicates = FALSE,
+                                  sep = ",",format = "basket")
+transactionsdf <- read.csv("ElectronidexTransactions2017.csv",header = FALSE,colClasses = 'character')
+
+itemlevels <- read.csv("ItemLevels.csv", sep = ";",header = FALSE, colClasses = 'character')
+```
+## Executive summary:
+
+From what we observed, obtaining the company Electroindex is a good idea for Blackwell. Both companies are complementary and would benefit for the high amount of sales from respective diferent products. Accesories are high on Blackwell's side while Computer are high in Electroindex, doing cross-selling between the companies would benefit both, therefore, we recommend to specialize each company in what they sell best and merge.
+
+*****
+
+## Introduction:
+To gather all the neccessery insights about Electroindex's business activity, we have used their online transactions data and a file containing all the electronics that they currently sell. Due to their lack of funding, Electronidex is only able to pull data on the items that customers purchased per their transactions, meaning that we cannot identify whether the same customer made multiple transactions during this time period.
+
+
+## Insights and findings:
+
+Using insights from previous analysis of Blackwell's products, we can see that products that have the highest volume sold are accessories and displays, which have shown to have a strong association with desktops and laptops in the Electroindex's data set. 
+
+```{r pic1, echo=FALSE,include=TRUE}
+myimg1 <- imager::load.image("screenshot.png")
+plot(myimg1,axes = FALSE)
+```
+
+We also know that products that have the highest predicted profitability for Blackwell are Tablets and PCs, shown on the ranked table below:
+
+```{r pic2, echo=FALSE,include=TRUE}
+myimg2 <- imager::load.image("Top 5 profits.png")
+plot(myimg2,axes = FALSE)
+```
+
+Using product association insights and the above information, we can conclude that Blackwell can gain profits in the following way if it decides to buy Electroindex:
+
+1) Since PCs have the most predicted profit for Blackwell and Electroindex's most sold items are PCs, it should use Electroindex's products such as PCs/Desktops/Laptops as it's product supply and bundle them with already existing Blackwell's accessories.
+
+2) Because there is a strong association between accessories and PCs, everytime a customer buys a PC, using targeted marketing Blackwell could offer bundles or suggestions for customers to also buy accessories, which in most cases will provide extra profit.
+
+```{r Data inspection r,echo = FALSE,  include = TRUE}
+cat("Number of transactions\n\n")
+
+length (transactions)
+cat("\n")
+inspect(transactions[1:10], itemSep = " + ", setStart = "",
+        setEnd ="", linebreak = FALSE)
+
+cat("Number of transactions per item:","/n")
+for(l in 1:6){
+
+print(paste(l,"Item -->", length(which(size(transactions)== l))))
+   }
+```
+
+While doing market basket analysis, we have discovered some strong associations between Electroindex's products. In particular, a lot of customers who shop at Electroindex will purchase "bundles" of products, mainly as a combination of desktop/laptop and accessories. We have also found out that Electroindex's most sold products are desktops and laptops, which you can see on the graph below:
+
+```{r Plots By Items,echo = FALSE,  include = TRUE}
+itemFrequencyPlot(transactions, horiz = TRUE, 
+                  type = "absolute",topN = 13,popCol = TRUE)
+```
+```{r Creating rules for Items r,echo = FALSE,  include = FALSE}
+#Creating rules for the transactions
+rules <- apriori (transactions, parameter = list(supp = 0.0015, 
+                                                 conf = 0.8, minlen = 2,target = "rules"))
+rules <- rules[which(is.redundant(rules) == FALSE)]
+```
+
+```{r Top 10 Rules sorted r,echo = FALSE,  include = TRUE}
+# SORTING RULES BY:
+rules_list <- c("lift", "support", "confidence")
+
+for (i in rules_list){
+  cat("\nRules Sorted by",i,"\n")
+  inspect(head(sort(rules, by = i,decreasing = TRUE),n = 5)
+          ,itemSep = " + ", setStart = "",setEnd ="", linebreak = FALSE)
+}
+```
+```{r Creating data.frame r,echo = FALSE,  include = FALSE}
+transactions@itemInfo$category <- itemlevels[,2]
+transactions_divided <- aggregate(transactions, by = 'category')
+itemLabels(transactions_divided)
+
+rules_divided <- apriori (transactions_divided, parameter = list(supp = 0.01, 
+                                                 conf = 0.8, minlen = 2,target = "rules"))
+rules_divided <- rules_divided[which(is.redundant(rules_divided) == FALSE)]
+```
+
+```{r Loop for rules of Product_Type r,echo = FALSE,  include = FALSE}
+#Loop to get rules_divided for every subset
+itemrules <- list()
+rules_loop <- c()
+for (k in itemLabels(transactions_divided)) {
+  rules_loop <- subset(rules_divided, items %in% k)
+  itemrules[[k]] <- rules_loop
+}
+```
+
+```{r Product type plot ,echo = FALSE,  include = TRUE}
+itemFrequencyPlot(transactions_divided, horiz = TRUE, 
+                  type = "absolute",topN = 10,popCol = TRUE)
+```
+
+```{r DF Customer - Company,echo = FALSE,  include = FALSE}
+
+transactions@itemInfo$labels <- paste(itemlevels[,2],itemLabels(transactions))
+divided_df <- as.data.frame(as(transactions, 'matrix'))
+divided_df <- as.data.frame(ifelse(test = divided_df == TRUE,yes = 1,no = 0))
+x <- names(divided_df)
+for (i in 1:ncol(divided_df)){
+  for (j in 1:nrow(divided_df)){
+    if (divided_df[j,i]==1){
+      divided_df[j,i] <- x[i]
+      }
+   }
+}
+for (i in 1:nrow(divided_df)) {
+  vGamer <- sum(grepl(pattern = "Gam",x = divided_df[i,]))
+  vLaptops <- sum(grepl(pattern = "Laptops",x = divided_df[i,]))
+  vDesktop <- sum(grepl(pattern = "Desktop",x = divided_df[i,]))
+  vPrinters <- sum(grepl(pattern = "Printers",x = divided_df[i,]))
+  vMonitors <- sum(grepl(pattern = "Monitors",x = divided_df[i,]))
+  vTransactions <- sum(grepl(pattern = TRUE,x = as.data.frame(as(transactions, 'matrix'))[i,]))
+  if(vLaptops + vDesktop>=2 | vPrinters>=2 | vMonitors>=2 | vTransactions > 6){
+    divided_df$Retail[i] <- "Company" 
+  } else {
+    divided_df$Retail[i] <- "Costumer"
+    }
+divided_df$Gamer[i] <- ifelse (vGamer >= 2,yes = 1,no = 0)
+}
+```
+```{r Customer/Company Ratio,echo = FALSE,  include = TRUE}
+paste(round((length(which(divided_df$Retail == "Costumer")))/nrow(divided_df)*100,digits = 2),
+          "%"," of transactions are done by Costumers",sep = "")
+paste(round((length(which(divided_df$Retail == "Company")))/nrow(divided_df)*100,digits = 2),
+      "%"," of transactions are done by Companies",sep = "")
+paste(round((length(which(divided_df$Gamer == 1)))/nrow(divided_df)*100,digits = 2),
+      "%"," of transactions are done by Gamers",sep = "")
+```
+## Conclusion:
+
+Using association insights and comparing which types of products both Blackwell and Electroindex sell, we can conclude that if Blackwell buys Electroindex, it will benefit the most from selling Electroindex's most sold items such as PCs/Laptops/Desktops bundled with Blackwell's accessories supply. Unless Electroindex mainly deals with businesses, meaning that they have a much larger supply of electronics which might not be necessery for a company like Blackwell, who mainly deal with non business customers, the acquisition of Electroindex will bring more profit in the future. Further discussion is required in order to understand Blackwell's objectives more clearly, which will make it easier to decide wether Blackwell should buy Electroindex.
+
+
