@@ -63,8 +63,8 @@ rules_loop <- c()
 for (k in itemLabels(transactions_divided)) {
   rules_loop <- subset(rules_divided, items %in% k)
   itemrules[[k]] <- rules_loop
-  }
-saveRDS(object = itemrules,file = "Models/ItemRulesSubset")
+}
+
 transactions@itemInfo$labels <- paste(itemlevels[,2],itemLabels(transactions))
 divided_df <- as.data.frame(as(transactions, 'matrix'))
 divided_df <- as.data.frame(ifelse(test = divided_df == TRUE,yes = 1,no = 0))
@@ -73,18 +73,27 @@ for (i in 1:ncol(divided_df)){
   for (j in 1:nrow(divided_df)){
     if (divided_df[j,i]==1){
       divided_df[j,i] <- x[i]
-      }
-   }
+    }
+  }
 }
 for (i in 1:nrow(divided_df)) {
+  vGamer <- sum(grepl(pattern = "Gam",x = divided_df[i,]))
   vLaptops <- sum(grepl(pattern = "Laptops",x = divided_df[i,]))
   vDesktop <- sum(grepl(pattern = "Desktop",x = divided_df[i,]))
   vPrinters <- sum(grepl(pattern = "Printers",x = divided_df[i,]))
-  if(vLaptops>=2 | vDesktop>=2 | vPrinters>=2){
-    divided_df$Retail[i] <- "Company" } else {divided_df$Retail[i] <- "Costumer"}
+  vMonitors <- sum(grepl(pattern = "Monitors",x = divided_df[i,]))
+  vTransactions <- sum(grepl(pattern = TRUE,x = as.data.frame(as(transactions, 'matrix'))[i,]))
+  if(vLaptops + vDesktop>=2 | vPrinters>=2 | vMonitors>=2 | vTransactions > 6){
+    divided_df$Retail[i] <- "Company" 
+  } else {
+    divided_df$Retail[i] <- "Costumer"
+  }
+  divided_df$Gamer[i] <- ifelse (vGamer >= 2,yes = 1,no = 0)
 }
 
 paste(round((length(which(divided_df$Retail == "Costumer")))/nrow(divided_df)*100,digits = 2),
-          "%"," of transactions are done by Costumers",sep = "")
+      "%"," of transactions are done by Costumers",sep = "")
 paste(round((length(which(divided_df$Retail == "Company")))/nrow(divided_df)*100,digits = 2),
       "%"," of transactions are done by Companies",sep = "")
+paste(round((length(which(divided_df$Gamer == 1)))/nrow(divided_df)*100,digits = 2),
+      "%"," of transactions are done by Gamers",sep = "")
